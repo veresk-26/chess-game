@@ -5,7 +5,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ArtemisGis/buildozer-action@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          command: android debug
+          python-version: '3.10'
+
+      - name: Install Buildozer and dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y git zip unzip openjdk-17-jdk signfile libc6-dev
+          pip install --upgrade pip
+          pip install buildozer cython
+
+      - name: Build Android APK with Buildozer
+        run: |
+          buildozer android debug
